@@ -275,14 +275,17 @@ class oauser {
             $sth->bindParam(':ip', $ip_id, PDO::PARAM_INT);
             if ($sth->execute() == true) {
                 $res = $sth->fetch(PDO::FETCH_ASSOC);
-                //如果查询为记住登陆状态
-                if ($res['id'] > 0) {
-                    //更新用户登陆信息
-                    if ($this->update_user($res['id'], $ip_id, true, $res['remember'])) {
-                        //注册session login变量
-                        $this->set_session_login($res['id']);
-                        //修正登陆超时记录
-                        $this->user_time();
+                if ($res) //Check result is NOT null
+                {
+                    //如果查询为记住登陆状态
+                    if ($res['id'] > 0) {
+                        //更新用户登陆信息
+                        if ($this->update_user($res['id'], $ip_id, true, $res['remember'])) {
+                            //注册session login变量
+                            $this->set_session_login($res['id']);
+                            //修正登陆超时记录
+                            $this->user_time();
+                        }
                     }
                 }
             }
